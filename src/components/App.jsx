@@ -5,7 +5,7 @@ import "./App.css";
 import { selectIsError, selectIsLoading } from "../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchContactsThunk } from "../redux/operations";
+import { fetchContactsThunk } from "../redux/contactsOps";
 
 
 const App = () => {
@@ -14,7 +14,6 @@ const App = () => {
     useEffect(() => {
         dispatch(fetchContactsThunk());
     }, [dispatch]);
-
 
     const isLoading = useSelector(selectIsLoading);
     const isError = useSelector(selectIsError);

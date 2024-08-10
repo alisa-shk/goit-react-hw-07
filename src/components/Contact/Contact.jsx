@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { deleteContactThunk } from "../../redux/operations";
+import { deleteContactThunk } from "../../redux/contactsOps";
 import s from "./Contact.module.css";
 
 const Contact = ({ data: { name, number, id } }) => {
