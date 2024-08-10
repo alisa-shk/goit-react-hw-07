@@ -1,24 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
-import initialContacts from "../contacts.json";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { deleteContactThunk, fetchContactsThunk, addContactThunk } from "./operations";
 
 const initialState = {
-    items: initialContacts,
+    items: [],
+    loading: false,
+    elserror: null,
 };
 
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState,
-    reducers: {
-        deleteContact: (state, action) => {
-            state.items = state.items.filter(contact => contact.id !== action.payload)
-        },
-        addContact: (state, action) => {
-            state.items.push(action.payload);
-        },
+    extraReducers: builder => {
+        builder
+            .addCase(fetchContactsThunk.fulfilled, (state, action) => {
+                state.items = action.payload;
+            })
+            .addCase(addContactThunk.fulfilled, (state, action) => {
+                state.items.push(action.payload);
+            })
+            .addCase(deleteContactThunk.fulfilled, (state, action) => {
+                state.items = state.items.filter(item => item.id !== action.payload);
+            })
+            .addMatcher(isAnyOf(fetchContactsThunk.pending, addContactThunk.pending, deleteContactThunk.pending), state => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addMatcher(isAnyOf(fetchContactsThunk.rejected, addContactThunk.rejected, deleteContactThunk.rejected), state => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addMatcher(isAnyOf(fetchContactsThunk.fulfilled, addContactThunk.fulfilled, deleteContactThunk.fulfilled), state => {
+                state.loading = false;
+            })
     },
 });
 
 export const contactsReducer = contactsSlice.reducer;
-export const { deleteContact, addContact } = contactsSlice.actions;
-export const selectContacts = state => state.contacts.items;
 

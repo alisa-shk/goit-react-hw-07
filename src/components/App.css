@@ -2,3 +2,11 @@
     padding: 32px;
     margin: 0 auto;
 }
+
+.loader {
+    color: blue;
+}
+
+.err {
+    color: red;
+}
